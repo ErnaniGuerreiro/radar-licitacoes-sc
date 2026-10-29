@@ -1,0 +1,74 @@
+name: atualizar-painel
+
+on:
+  schedule:
+    - cron: "17 */2 * * *"
+  workflow_dispatch:
+    inputs:
+      dias:
+        description: "Reconsultar publicações dos últimos N dias (use 45 na primeira vez)"
+        default: "3"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: painel
+  cancel-in-progress: false
+
+jobs:
+  coletar-e-publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Restaurar histórico
+        run: |
+          mkdir -p dados
+          if git ls-remote --exit-code --heads origin dados >/dev/null 2>&1; then
+            git fetch --depth=1 origin dados
+            git archive FETCH_HEAD | tar -x -C dados
+          fi
+
+      - name: Coletar
+        run: |
+          pip install requests playwright
+          playwright install --with-deps chromium
+          python coletor.py --dias "${{ github.event.inputs.dias || '3' }}"
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+
+      - name: Montar o site
+        run: |
+          mkdir -p _site/dados
+          cp site/index.html site/mapa_sc.json _site/
+          cp dados/*.json _site/dados/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Guardar histórico
+        run: |
+          cd dados
+          git init -q -b dados
+          git config user.name "coletor-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add -A
+          git commit -qm "dados $(date -u +'%F %H:%M')"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" dados
