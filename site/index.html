@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Radar de Licitações · Santa Catarina</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%9B%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f6fa; --surface:#ffffff; --surface2:#f0f2f8; --border:#e3e6ef; --text:#0e1320; --muted:#5b6479;
+  --accent:#2f5bea; --accent2:#6b4ff0; --accent-soft:rgba(47,91,234,.10);
+  --crit:#e5384d; --warn:#c9780a; --ok:#12915f; --shadow:0 1px 2px rgba(16,24,40,.05),0 8px 24px -12px rgba(16,24,40,.12);
+  --glow:radial-gradient(60rem 24rem at 15% -10%,rgba(47,91,234,.10),transparent 60%);
+  --bar:#2f5bea; --bar2:#b9c2dc;
+  color-scheme:light;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a0c11; --surface:#10131a; --surface2:#161a23; --border:#222836; --text:#e9ecf4; --muted:#8c95aa;
+    --accent:#7aa8ff; --accent2:#9a86ff; --accent-soft:rgba(122,168,255,.12);
+    --crit:#ff6577; --warn:#f2b255; --ok:#3ccf91; --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px -16px rgba(0,0,0,.7);
+    --glow:radial-gradient(60rem 24rem at 15% -10%,rgba(122,168,255,.13),transparent 60%);
+    --bar:#7aa8ff; --bar2:#2a3246; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a0c11; --surface:#10131a; --surface2:#161a23; --border:#222836; --text:#e9ecf4; --muted:#8c95aa;
+  --accent:#7aa8ff; --accent2:#9a86ff; --accent-soft:rgba(122,168,255,.12);
+  --crit:#ff6577; --warn:#f2b255; --ok:#3ccf91; --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px -16px rgba(0,0,0,.7);
+  --glow:radial-gradient(60rem 24rem at 15% -10%,rgba(122,168,255,.13),transparent 60%);
+  --bar:#7aa8ff; --bar2:#2a3246; color-scheme:dark;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 7rem)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg) var(--glow) no-repeat;color:var(--text);font:14px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-feature-settings:"cv11","ss01";-webkit-font-smoothing:antialiased;min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+button,input,select{font:inherit;color:inherit}
+a{color:inherit}
+.num{font-variant-numeric:tabular-nums}
+.app{max-width:1440px;margin:0 auto}
+
+/* topo */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:1rem;padding:.75rem 1.25rem;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:.7rem;min-width:0}
+.brand svg{flex:none}
+.brand b{display:block;font-size:15px;font-weight:650;letter-spacing:-.01em;line-height:1.15}
+.brand span{display:block;font-size:12px;color:var(--muted);line-height:1.2}
+.search{flex:1;max-width:36rem;margin-inline:auto;position:relative;display:flex;align-items:center}
+.search svg{position:absolute;left:.8rem;color:var(--muted)}
+.search input{width:100%;padding:.55rem 2.4rem .55rem 2.3rem;border:1px solid var(--border);background:var(--surface);border-radius:10px;outline:none;transition:border-color .15s,box-shadow .15s}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search kbd{position:absolute;right:.6rem;font:11px Inter,sans-serif;color:var(--muted);border:1px solid var(--border);border-radius:5px;padding:0 .35rem;background:var(--surface2)}
+.top-r{display:flex;align-items:center;gap:.6rem;margin-left:auto}
+.live{display:flex;align-items:center;gap:.45rem;font-size:12px;color:var(--muted);padding:.35rem .65rem;border:1px solid var(--border);border-radius:999px;background:var(--surface);white-space:nowrap}
+.live i{width:7px;height:7px;border-radius:50%;background:var(--muted);position:relative}
+.live.fresh i{background:var(--ok)} .live.stale i{background:var(--warn)} .live.old i{background:var(--crit)}
+.live.fresh i::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--ok);opacity:0;animation:ping 2.4s ease-out infinite}
+@keyframes ping{0%{transform:scale(.5);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+.icon-btn,.btn{border:1px solid var(--border);background:var(--surface);border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;transition:background .15s,border-color .15s}
+.icon-btn{width:2.25rem;height:2.25rem;justify-content:center}
+.btn{padding:.45rem .8rem;font-weight:500}
+.icon-btn:hover,.btn:hover{background:var(--surface2)}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
+.btn.primary:hover{filter:brightness(1.08);background:linear-gradient(135deg,var(--accent),var(--accent2))}
+.only-m{display:none}
+
+/* abas */
+.tabs{display:flex;gap:.25rem;padding:.6rem 1.25rem 0;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.tabs a{padding:.6rem .9rem;text-decoration:none;color:var(--muted);font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;display:inline-flex;gap:.45rem;align-items:center}
+.tabs a:hover{color:var(--text)}
+.tabs a.on{color:var(--text);border-color:var(--accent)}
+.tabs em{font-style:normal;font-size:11px;padding:.05rem .45rem;border-radius:999px;background:var(--surface2);color:var(--muted)}
+.tabs i.warn{width:7px;height:7px;border-radius:50%;background:var(--warn)}
+
+/* layout */
+.layout{display:grid;grid-template-columns:272px minmax(0,1fr);gap:1.5rem;padding:1.25rem}
+.layout.nofilters{grid-template-columns:minmax(0,1fr)}
+.layout.nofilters .side{display:none}
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 7.1rem);align-self:start;max-height:calc(100vh - 8.5rem);overflow:auto;padding-right:.25rem;display:flex;flex-direction:column;gap:1.1rem;scrollbar-width:thin}
+.fg h4{margin:0 0 .5rem;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:2px;gap:2px}
+.seg button{border:0;background:transparent;padding:.4rem .3rem;border-radius:8px;cursor:pointer;color:var(--muted);font-weight:500;font-size:13px}
+.seg button.on{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+.opt{display:flex;align-items:center;gap:.55rem;padding:.32rem .45rem;margin:0 -.45rem;border-radius:8px;cursor:pointer;width:calc(100% + .9rem);border:0;background:transparent;text-align:left}
+.opt:hover{background:var(--surface2)}
+.opt .box{width:15px;height:15px;border:1.5px solid var(--border);border-radius:4px;flex:none;display:grid;place-items:center}
+.opt.on .box{background:var(--accent);border-color:var(--accent)}
+.opt.on .box::after{content:"";width:7px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.opt .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.opt .c{color:var(--muted);font-size:12px}
+.rng{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.fld{width:100%;padding:.45rem .6rem;border:1px solid var(--border);background:var(--surface);border-radius:9px;outline:none}
+.fld:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.ac{position:relative}
+.ac-list{position:absolute;z-index:6;left:0;right:0;top:calc(100% + 4px);background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);max-height:14rem;overflow:auto}
+.ac-list button{display:flex;justify-content:space-between;width:100%;border:0;background:transparent;padding:.45rem .65rem;cursor:pointer;text-align:left}
+.ac-list button:hover{background:var(--surface2)}
+.ac-list span{color:var(--muted);font-size:12px}
+.tgl{display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.2rem 0;border:0;background:transparent;width:100%;text-align:left}
+.tgl .sw{width:30px;height:18px;border-radius:999px;background:var(--bar2);position:relative;flex:none;transition:background .15s}
+.tgl .sw::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .15s}
+.tgl.on .sw{background:var(--accent)} .tgl.on .sw::after{transform:translateX(12px)}
+.link{border:0;background:transparent;color:var(--accent);cursor:pointer;padding:0;font-weight:500}
+
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.9rem}
+.kpi{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;box-shadow:var(--shadow);overflow:hidden;text-align:left;cursor:default}
+button.kpi{cursor:pointer;font:inherit} button.kpi:hover{border-color:color-mix(in srgb,var(--accent) 50%,var(--border))}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:500}
+.kpi .v{font-size:30px;font-weight:650;letter-spacing:-.025em;line-height:1.15;margin-top:.15rem}
+.kpi .s{font-size:12px;color:var(--muted);margin-top:.1rem}
+.kpi.hot .v{color:var(--crit)}
+.kpi svg.sp{position:absolute;right:.9rem;top:.9rem;opacity:.85}
+
+/* barra de resultado */
+.bar{display:flex;align-items:center;gap:.8rem;margin:1.1rem 0 .6rem;flex-wrap:wrap}
+.bar h2{margin:0;font-size:15px;font-weight:600}
+.bar .sp{flex:1}
+.bar select{padding:.4rem .6rem;border:1px solid var(--border);background:var(--surface);border-radius:9px}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.7rem}
+.chip{display:inline-flex;align-items:center;gap:.35rem;border:1px solid var(--border);background:var(--surface);border-radius:999px;padding:.2rem .35rem .2rem .7rem;font-size:12px;cursor:pointer}
+.chip b{font-weight:500;color:var(--muted)}
+.chip span{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;background:var(--surface2);color:var(--muted)}
+.chip:hover span{background:var(--crit);color:#fff}
+
+/* itens */
+.feed{display:flex;flex-direction:column;gap:.55rem}
+.item{display:grid;grid-template-columns:4px minmax(0,1fr) auto;gap:1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.85rem 1rem .85rem .85rem;cursor:pointer;transition:border-color .15s,transform .15s,box-shadow .15s;animation:rise .35s ease both}
+.item:hover{border-color:color-mix(in srgb,var(--accent) 55%,var(--border));box-shadow:var(--shadow);transform:translateY(-1px)}
+@keyframes rise{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.rail{border-radius:4px;background:var(--bar2)}
+.u-crit .rail{background:var(--crit)} .u-warn .rail{background:var(--warn)} .u-ok .rail{background:var(--accent)}
+.tags{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;font-size:12px;color:var(--muted)}
+.badge{padding:.08rem .5rem;border-radius:6px;background:var(--surface2);border:1px solid var(--border);font-weight:500;color:var(--text);font-size:11.5px}
+.badge.m{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+.muni{font-weight:600;color:var(--text);font-size:13px}
+.obj{margin:.3rem 0 .35rem;font-size:14px;font-weight:500;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sub{font-size:12px;color:var(--muted);display:flex;gap:1rem;flex-wrap:wrap}
+.sub b{color:var(--text);font-weight:600}
+.right{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:.15rem;min-width:7.5rem}
+.left{font-size:18px;font-weight:650;letter-spacing:-.02em;line-height:1.2}
+.u-crit .left{color:var(--crit)} .u-warn .left{color:var(--warn)}
+.dl{font-size:12px;color:var(--muted)}
+.star{border:0;background:transparent;cursor:pointer;color:var(--muted);padding:.15rem;border-radius:6px;display:grid}
+.star:hover{color:var(--warn)} .star.on{color:var(--warn)}
+.more{margin:1rem auto 0;display:flex}
+.empty{padding:3rem 1rem;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:14px}
+
+/* cartões e gráficos */
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:.9rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.2rem;box-shadow:var(--shadow);min-width:0}
+.card h3{margin:0;font-size:14px;font-weight:600}
+.card p.n{margin:.15rem 0 .8rem;font-size:12px;color:var(--muted)}
+.c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}
+.hb{display:grid;grid-template-columns:minmax(0,10.5rem) 1fr auto;gap:.6rem;align-items:center;width:100%;border:0;background:transparent;padding:.3rem .25rem;border-radius:8px;cursor:pointer;text-align:left}
+.hb:hover{background:var(--surface2)}
+.hb-l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
+.hb-bar{height:8px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.hb-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.hb-n{font-size:12px;color:var(--muted);min-width:2.5rem;text-align:right}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{fill:var(--muted);font-size:11px;font-family:Inter,sans-serif}
+.legend{display:flex;gap:1rem;font-size:12px;color:var(--muted);margin-bottom:.4rem}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:.35rem}
+.tip{position:fixed;z-index:60;pointer-events:none;background:var(--surface);border:1px solid var(--border);border-radius:9px;box-shadow:var(--shadow);padding:.4rem .6rem;font-size:12px;opacity:0;transition:opacity .1s;max-width:16rem}
+.tip.on{opacity:1}
+
+/* cobertura */
+.cov{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.9rem}
+.src{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem}
+.src h4{margin:0 0 .2rem;font-size:14px;display:flex;gap:.5rem;align-items:center;justify-content:space-between}
+.pill{font-size:11px;font-weight:600;padding:.1rem .5rem;border-radius:999px}
+.pill.ok{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.pill.parcial,.pill.desconhecido{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.pill.falhou{background:color-mix(in srgb,var(--crit) 16%,transparent);color:var(--crit)}
+.pill.nao_implementada{background:var(--surface2);color:var(--muted)}
+.src p{margin:.3rem 0 0;font-size:12.5px;color:var(--muted)}
+.big{font-size:44px;font-weight:650;letter-spacing:-.03em;line-height:1}
+.fail{font-size:12.5px;padding:.4rem 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:1rem}
+.fail span{color:var(--muted)}
+
+/* gaveta */
+.scrim{position:fixed;inset:0;background:rgba(5,8,14,.5);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(34rem,100%);background:var(--surface);border-left:1px solid var(--border);z-index:50;transform:translateX(102%);transition:transform .25s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.drawer.on{transform:none}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.25rem;border-bottom:1px solid var(--border)}
+.db{padding:1.25rem;overflow:auto;flex:1}
+.db h2{margin:.4rem 0 1rem;font-size:18px;line-height:1.35;letter-spacing:-.01em}
+.kv{display:grid;grid-template-columns:8.5rem 1fr;gap:.55rem 1rem;font-size:13px;margin:1.1rem 0}
+.kv dt{color:var(--muted)} .kv dd{margin:0;overflow-wrap:anywhere}
+.cta{display:flex;gap:.6rem;flex-wrap:wrap;padding:1rem 1.25rem calc(1rem + env(safe-area-inset-bottom,0px));border-top:1px solid var(--border)}
+.cta a{text-decoration:none}
+.big-left{font-size:28px;font-weight:650;letter-spacing:-.03em}
+
+@media (max-width:1080px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;inset:0 auto 0 0;width:min(20rem,88vw);z-index:45;background:var(--surface);border-right:1px solid var(--border);padding:calc(1rem + env(safe-area-inset-top,0px)) 1rem 1rem;max-height:none;transform:translateX(-102%);transition:transform .25s}
+  .side.open{transform:none}
+  .layout.nofilters .side{display:flex}
+  .only-m{display:inline-flex}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .c8,.c6,.c4{grid-column:span 12}
+}
+@media (max-width:640px){
+  .top{flex-wrap:wrap;padding:.6rem .9rem;gap:.6rem}
+  .search{order:3;flex-basis:100%;max-width:none}
+  .brand span,.live span.long{display:none}
+  .layout{padding:.9rem}
+  .item{grid-template-columns:4px minmax(0,1fr)}
+  .right{grid-column:2;flex-direction:row;align-items:center;justify-content:space-between;text-align:left;min-width:0}
+  .kv{grid-template-columns:1fr} .kv dt{margin-bottom:-.35rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.hint{margin:.35rem 0 0;font-size:12px;color:var(--muted);line-height:1.4}
+.radar-add{display:flex;gap:.4rem;margin-top:.5rem}.radar-add .fld{flex:1;min-width:0}
+.radar{display:flex;align-items:stretch;gap:.25rem;margin-bottom:.3rem}
+.radar-b{flex:1;min-width:0;display:flex;justify-content:space-between;gap:.5rem;align-items:center;text-align:left;border:1px solid var(--border);background:var(--surface);border-radius:9px;padding:.4rem .6rem;cursor:pointer}
+.radar-b:hover{border-color:color-mix(in srgb,var(--accent) 55%,var(--border))}
+.radar-b b{font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.radar-b span{font-size:12px;color:var(--muted);white-space:nowrap}.radar-b span em{font-style:normal;color:var(--accent)}
+.radar-x{border:0;background:transparent;color:var(--muted);cursor:pointer;border-radius:8px;width:1.6rem}.radar-x:hover{color:var(--crit);background:var(--surface2)}
+.radar-exp{margin-top:.5rem;font-size:13px}.radar-exp summary{cursor:pointer;color:var(--accent);font-weight:500}
+.radar-exp textarea{width:100%;margin:.4rem 0;font:11px/1.4 ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:9px;padding:.5rem;resize:vertical}
+.badge.nova{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok);border-color:transparent}
+.badge.alt{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn);border-color:transparent}
+.badge.atip{background:color-mix(in srgb,var(--crit) 14%,transparent);color:var(--crit);border-color:transparent}
+.mapa svg{max-height:560px;margin-inline:auto}.mapa path{transition:fill-opacity .15s}.mapa path:hover{stroke:var(--text);stroke-width:1.5}
+.tgl[hidden]{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5bea"/><stop offset="1" stop-color="#7b5cf5"/></linearGradient></defs><rect width="34" height="34" rx="10" fill="url(#lg)"/><circle cx="17" cy="17" r="3" fill="#fff"/><circle cx="17" cy="17" r="8" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.5"/><path d="M17 17 L26 11" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+      <div><b>Radar de Licitações</b><span>Municípios de Santa Catarina</span></div>
+    </div>
+    <label class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Buscar objeto, município, órgão ou número…" autocomplete="off" aria-label="Buscar">
+      <kbd>/</kbd>
+    </label>
+    <div class="top-r">
+      <button class="btn only-m" id="btn-filtros" type="button">Filtros</button>
+      <div class="live" id="live"><i></i><span>Carregando…</span></div>
+      <button class="icon-btn" id="btn-theme" type="button" aria-label="Alternar tema claro/escuro">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="Seções">
+    <a href="#oportunidades" data-tab="oportunidades">Oportunidades <em id="tab-n">0</em></a>
+    <a href="#analise" data-tab="analise">Análise</a>
+    <a href="#cobertura" data-tab="cobertura">Fontes e cobertura <i class="warn" id="tab-warn" hidden></i></a>
+  </nav>
+
+  <div class="layout" id="layout">
+    <aside class="side" id="side" aria-label="Filtros">
+      <div class="fg" id="radares">
+        <h4>Meus radares</h4>
+        <div id="radar-list"></div>
+        <div class="radar-add"><input class="fld" id="radar-nome" type="text" placeholder="Nome do radar" aria-label="Nome do radar" maxlength="40"><button class="btn" id="radar-save" type="button" data-act="save-radar">Salvar</button></div>
+        <p class="hint">Guarda os filtros atuais para reabrir com um clique.</p>
+        <details class="radar-exp"><summary>Usar nos alertas (Telegram)</summary>
+          <p class="hint">Copie e cole no arquivo <b>watchlist.json</b> do seu repositório.</p>
+          <textarea id="radar-json" readonly rows="6" aria-label="Radares em formato watchlist.json"></textarea>
+          <button class="btn" type="button" data-act="copyjson">Copiar</button></details>
+      </div>
+      <div class="fg"><h4>Tipo</h4>
+        <div class="seg" id="f-tipo"><button data-v="todas">Todas</button><button data-v="disputas" class="on">Disputas</button><button data-v="cred">Credenc.</button></div>
+      </div>
+      <div class="fg"><h4>Prazo para propostas</h4>
+        <div class="seg" id="f-urg"><button data-v="todas" class="on">Todos</button><button data-v="h48">48 h</button><button data-v="d7">7 dias</button><button data-v="d30">30 dias</button></div>
+      </div>
+      <div class="fg"><h4>Novidades</h4>
+        <div class="seg" id="f-news"><button data-v="todas" class="on">Todas</button><button data-v="novas">Novas</button><button data-v="alteradas">Alteradas</button></div>
+        <button class="tgl" id="f-since" type="button" data-act="tgl-since" hidden><span class="sw"></span><span>Só o que chegou desde a minha última visita</span></button>
+      </div>
+      <div class="fg"><h4>Modalidade</h4><div id="f-mods"></div></div>
+      <div class="fg"><h4>Categoria</h4><div id="f-cats"></div></div>
+      <div class="fg"><h4>Associação de municípios</h4><div id="f-assoc"></div></div>
+      <div class="fg"><h4>Município</h4>
+        <div class="ac"><input class="fld" id="f-muni" type="text" placeholder="Digite para buscar…" autocomplete="off" aria-label="Filtrar município"><div class="ac-list" id="ac-list" hidden></div></div>
+      </div>
+      <div class="fg"><h4>Valor estimado (R$)</h4>
+        <div class="rng"><input class="fld num" id="f-vmin" inputmode="numeric" placeholder="Mínimo" aria-label="Valor mínimo"><input class="fld num" id="f-vmax" inputmode="numeric" placeholder="Máximo" aria-label="Valor máximo"></div>
+      </div>
+      <div class="fg">
+        <button class="tgl" id="f-direct" type="button"><span class="sw"></span><span>Incluir contratações diretas<br><small style="color:var(--muted)">dispensas e inexigibilidades sem prazo, últimos 15 dias</small></span></button>
+        <button class="tgl" id="f-longo" type="button" data-act="tgl-longo"><span class="sw"></span><span>Incluir prazos acima de 1 ano<br><small style="color:var(--muted)">em geral credenciamentos sem data real</small></span></button>
+        <button class="tgl" id="f-atip" type="button" data-act="tgl-atip"><span class="sw"></span><span>Incluir valores atípicos nos totais<br><small style="color:var(--muted)">valores muito acima do padrão, possíveis erros</small></span></button>
+        <button class="tgl" id="f-saved" type="button"><span class="sw"></span><span>Somente as que salvei</span></button>
+      </div>
+      <button class="link" id="f-clear" type="button">Limpar todos os filtros</button>
+    </aside>
+
+    <main id="main">
+      <section id="v-oportunidades">
+        <div class="kpis" id="kpis"></div>
+        <div class="bar"><h2 id="res-t">Oportunidades</h2><span class="sp"></span>
+          <button class="btn" type="button" data-act="csv" id="btn-csv">Exportar CSV</button><button class="btn" type="button" data-act="copylink" id="btn-link">Copiar link</button>
+          <label style="color:var(--muted);font-size:12px">Ordenar&nbsp;<select id="sort"><option value="prazo">Prazo mais próximo</option><option value="valor">Maior valor</option><option value="recentes">Mais recentes</option></select></label>
+        </div>
+        <div class="chips" id="chips"></div>
+        <div class="feed" id="feed"></div>
+        <button class="btn more" id="more" type="button" hidden>Mostrar mais</button>
+      </section>
+
+      <section id="v-analise" hidden>
+        <div class="grid">
+          <div class="card c12"><h3>Mapa das oportunidades</h3><p class="n">Quanto mais escuro, mais oportunidades abertas no município (considera os filtros atuais). Clique em um município para ver a lista dele.</p><div class="chart mapa" id="ch-mapa"></div></div>
+          <div class="card c8"><h3>Prazos nos próximos 30 dias</h3><p class="n" id="n-prazos">Quando as propostas encerram.</p>
+            <div class="legend"><span><i style="background:var(--bar)"></i>Disputas</span><span><i style="background:var(--bar2)"></i>Credenciamentos</span></div>
+            <div class="chart" id="ch-prazos"></div></div>
+          <div class="card c4"><h3>Faixas de valor</h3><p class="n">Quantas oportunidades em cada faixa.</p><div id="ch-faixas"></div></div>
+          <div class="card c6"><h3>O que está sendo contratado</h3><p class="n">Clique para filtrar a lista.</p><div id="ch-cats"></div></div>
+          <div class="card c6"><h3>Municípios com mais oportunidades</h3><p class="n">Clique para filtrar a lista.</p><div id="ch-munis"></div></div>
+          <div class="card c12"><h3>Publicações por dia</h3><p class="n">Processos publicados no PNCP pelos municípios de SC, últimos 30 dias.</p><div class="chart" id="ch-pub"></div></div>
+        </div>
+      </section>
+
+      <section id="v-cobertura" hidden>
+        <div class="grid">
+          <div class="card c4"><h3>Cobertura da última coleta</h3><p class="n" id="cov-n"></p><div id="cov-big"></div></div>
+          <div class="card c8"><h3>Como ler esta página</h3><p class="n">O painel só vale o quanto cobre o que existe. Por isso medimos isso.</p>
+            <p style="margin:0 0 .6rem">A coleta compara, para cada consulta, o total que a fonte diz ter com o que foi realmente baixado. Se algo falhar, aparece aqui, e nenhum dado já coletado é apagado.</p>
+            <p style="margin:0;color:var(--muted)">O PNCP é a base legal (Lei 14.133/2021), mas nem todo município publica tudo, nem na hora. Outras fontes entram para fechar essa lacuna, e cada uma mostra seu estado real abaixo.</p></div>
+        </div>
+        <h3 style="margin:1.4rem 0 .7rem;font-size:14px">Fontes</h3>
+        <div class="cov" id="cov-src"></div>
+        <div id="cov-fail"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer" aria-hidden="true" aria-label="Detalhes da licitação"></aside>
+  <div class="tip" id="tip"></div>
+</div>
+
+<script id="preload">/*PRELOAD*/</script>
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const NF = new Intl.NumberFormat('pt-BR');
+const BRL = new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL', maximumFractionDigits:0});
+const BRLc = new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL', notation:'compact', maximumFractionDigits:1});
+const DAY = 864e5, HOUR = 36e5;
+const pad = (n) => String(n).padStart(2, '0');
+const fmtDT = (ms) => { const d = new Date(ms); return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${String(d.getFullYear()).slice(2)} · ${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const fmtD = (ms) => { const d = new Date(ms); return `${pad(d.getDate())}/${pad(d.getMonth()+1)}`; };
+const fmtPrazo = (r) => (r.prazo_aprox ? fmtD(r._end) + '/' + String(new Date(r._end).getFullYear()).slice(2) : fmtDT(r._end));
+const chave = (s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/['’\-]/g, ' ').replace(/\s+/g, ' ').trim();
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+
+let DATA = {all: [], res: null, st: null, mapa: null, primeira: null};
+const DEF = () => ({q:'', tipo:'disputas', urg:'todas', news:'todas', mods:new Set(), cats:new Set(), assocs:new Set(), munis:new Set(),
+                   vmin:null, vmax:null, direct:false, longo:false, atip:false, since:false, onlySaved:false});
+const S = Object.assign(DEF(), {tab:'oportunidades', sort:'prazo', limit:50});
+let saved = new Set(store.get('radar-sc-saved', []));
+let radares = store.get('radar-sc-radares', []);
+let lastVisit = null;
+(() => {   // "visita" = sessão com intervalo de 30 min
+  const now = Date.now(), v = store.get('radar-sc-visitas', {atual: null, anterior: null});
+  if (!v.atual || now - Date.parse(v.atual) > 30 * 60000) { v.anterior = v.atual; v.atual = new Date(now).toISOString(); store.set('radar-sc-visitas', v); }
+  lastVisit = v.anterior ? Date.parse(v.anterior) : null;
+})();
+
+/* ---------- dados ---------- */
+const quant = (arr, q) => arr.length ? arr[Math.min(arr.length - 1, Math.floor(q * arr.length))] : 0;
+function prepare(lic) {
+  const arr = lic.map((r) => {
+    const end = r.encerramento_propostas ? Date.parse(r.encerramento_propostas) : NaN;
+    const pub = r.publicacao ? Date.parse(r.publicacao) : NaN;
+    return Object.assign({}, r, {
+      _end: isNaN(end) ? null : end, _pub: isNaN(pub) ? null : pub,
+      _vis: r.visto_em ? Date.parse(r.visto_em) : null, _alt: r.alterado_em ? Date.parse(r.alterado_em) : null, _mud: r.mudancas || [],
+      _val: r.valor_estimado > 0 ? r.valor_estimado : null, _cred: r.modalidade === 'Credenciamento',
+      _hay: [r.objeto, r.municipio, r.orgao, r.modalidade, r.numero, r.processo, r.categoria, r.associacao, r.regiao].join(' ').toLowerCase()
+    });
+  });
+  const logs = arr.filter((r) => r._val).map((r) => Math.log10(r._val)).sort((a, b) => a - b);   // valor atípico: robusto (mediana/MAD em log)
+  const med = quant(logs, .5), mad = quant(logs.map((x) => Math.abs(x - med)).sort((a, b) => a - b), .5) || .5;
+  arr.forEach((r) => { r._atip = !!(r._val && (0.6745 * (Math.log10(r._val) - med) / mad > 3 || r._val >= 1e8)); });
+  DATA.medianaGeral = Math.pow(10, med);
+  return arr;
+}
+async function load() {
+  if (window.__PRELOAD__) return window.__PRELOAD__;
+  const t = Date.now();
+  const get = async (f) => { const r = await fetch(`dados/${f}?t=${t}`, {cache:'no-store'}); if (!r.ok) throw new Error(f + ' ' + r.status); return r.json(); };
+  const [lic, res, st] = await Promise.all([get('licitacoes.json'), get('resumo.json').catch(() => null), get('status.json').catch(() => null)]);
+  return {lic, res, st};
+}
+async function loadMapa() {
+  if (window.__MAPA__) return window.__MAPA__;
+  try { const r = await fetch('mapa_sc.json'); return r.ok ? await r.json() : null; } catch (e) { return null; }
+}
+const isNova = (r) => (r._pub && Date.now() - r._pub < 48 * HOUR) || !!(r._vis && DATA.primeira && r._vis > DATA.primeira + 6 * HOUR && Date.now() - r._vis < 24 * HOUR);
+const isAlt = (r) => !!(r._alt && Date.now() - r._alt < 7 * DAY);
+const mudouPrazo = (r) => isAlt(r) && r._mud.some((k) => /propostas/.test(k));
+const mudouValor = (r) => isAlt(r) && r._mud.includes('valor_estimado');
+
+/* ---------- filtros ---------- */
+function match(r, st, now, skip = []) {
+  if (r._end === null) { if (!st.direct || (r._pub || 0) < now - 15 * DAY) return false; }
+  else { if (r._end < now) return false; if (!st.longo && r._end - now > 365 * DAY) return false; }
+  if (!skip.includes('tipo')) { if (st.tipo === 'disputas' && (r._cred || r._end === null)) return false; if (st.tipo === 'cred' && !r._cred) return false; }
+  const lim = {h48:2, d7:7, d30:30}[st.urg];
+  if (lim && (r._end === null || r._end - now > lim * DAY)) return false;
+  if (st.news === 'novas' && !isNova(r)) return false;
+  if (st.news === 'alteradas' && !isAlt(r)) return false;
+  if (st.since && lastVisit && (r._vis || r._pub || 0) <= lastVisit) return false;
+  if (!skip.includes('mods') && st.mods.size && !st.mods.has(r.modalidade)) return false;
+  if (!skip.includes('cats') && st.cats.size && !st.cats.has(r.categoria)) return false;
+  if (!skip.includes('assocs') && st.assocs.size && !st.assocs.has(r.associacao)) return false;
+  if (st.munis.size && !st.munis.has(r.municipio)) return false;
+  if (st.vmin != null && (r._val == null || r._val < st.vmin)) return false;
+  if (st.vmax != null && (r._val == null || r._val > st.vmax)) return false;
+  if (st.onlySaved && !saved.has(r.id)) return false;
+  const terms = (st.q || '').trim().toLowerCase().split(/\s+/).filter(Boolean);
+  return terms.every((t) => r._hay.includes(t));
+}
+const filterRows = (skip = []) => { const now = Date.now(); return DATA.all.filter((r) => match(r, S, now, skip)); };
+const sorters = {
+  prazo: (a, b) => (a._end ?? 9e15) - (b._end ?? 9e15),
+  valor: (a, b) => (b._val ?? -1) - (a._val ?? -1),
+  recentes: (a, b) => (b._pub ?? 0) - (a._pub ?? 0)
+};
+const left = (r) => (r._end == null ? null : r._end - Date.now());
+const urgCls = (ms) => (ms == null ? '' : ms < 2 * DAY ? 'u-crit' : ms < 7 * DAY ? 'u-warn' : 'u-ok');
+function fmtLeft(ms) {
+  if (ms == null) return 'sem prazo';
+  if (ms <= 0) return 'encerrada';
+  const m = Math.floor(ms / 6e4), d = Math.floor(m / 1440), h = Math.floor(m % 1440 / 60), mi = m % 60;
+  return d >= 30 ? `${d} dias` : d >= 1 ? `${d}d ${h}h` : h >= 1 ? `${h}h ${mi}min` : `${mi} min`;
+}
+
+/* estado <-> radar <-> URL */
+const snap = (st) => ({q:st.q, tipo:st.tipo, urg:st.urg, news:st.news, mods:[...st.mods], cats:[...st.cats], assocs:[...st.assocs], munis:[...st.munis],
+                       vmin:st.vmin, vmax:st.vmax, direct:st.direct, longo:st.longo});
+const fromSnap = (f) => Object.assign(DEF(), f, {mods:new Set(f.mods || []), cats:new Set(f.cats || []), assocs:new Set(f.assocs || []), munis:new Set(f.munis || [])});
+function toQuery() {
+  const p = new URLSearchParams(), f = snap(S), d = snap(DEF());
+  Object.entries(f).forEach(([k, v]) => { if (JSON.stringify(v) !== JSON.stringify(d[k]) && v !== null && v !== '') p.set(k, Array.isArray(v) ? v.join('|') : v); });
+  if (S.sort !== 'prazo') p.set('sort', S.sort);
+  if (S.atip) p.set('atip', '1');
+  return p.toString();
+}
+function fromQuery() {
+  const p = new URLSearchParams(location.search); if (![...p.keys()].length) return;
+  const arr = (k) => (p.get(k) ? p.get(k).split('|') : []);
+  const f = {q:p.get('q') || '', tipo:p.get('tipo') || 'disputas', urg:p.get('urg') || 'todas', news:p.get('news') || 'todas',
+             mods:arr('mods'), cats:arr('cats'), assocs:arr('assocs'), munis:arr('munis'),
+             vmin:p.get('vmin') ? +p.get('vmin') : null, vmax:p.get('vmax') ? +p.get('vmax') : null, direct:p.get('direct') === 'true', longo:p.get('longo') === 'true'};
+  Object.assign(S, fromSnap(f)); S.sort = p.get('sort') || 'prazo'; S.atip = p.get('atip') === '1';
+}
+const syncURL = () => { try { const q = toQuery(); history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash); } catch (e) {} };
+const toggleSet = (set, v) => { set.has(v) ? set.delete(v) : set.add(v); };
+const resetFiltros = () => { Object.assign(S, DEF(), {limit:50}); $('#q').value = ''; $('#f-vmin').value = ''; $('#f-vmax').value = ''; };
+const go = (fn) => { fn(); S.limit = 50; render(); };
+
+/* ---------- topo e abas ---------- */
+function renderLive() {
+  const el = $('#live'), iso = (DATA.st && DATA.st.atualizado_em) || (DATA.res && DATA.res.atualizado_em);
+  if (!iso) { el.className = 'live'; el.lastElementChild.textContent = 'Sem data de atualização'; return; }
+  const m = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 6e4));
+  const txt = m < 1 ? 'agora' : m < 60 ? `há ${m} min` : m < 1440 ? `há ${Math.floor(m / 60)} h` : `há ${Math.floor(m / 1440)} d`;
+  el.className = 'live ' + (m < 240 ? 'fresh' : m < 1440 ? 'stale' : 'old');
+  el.lastElementChild.innerHTML = `<span class="long">Atualizado </span>${txt}`;
+}
+function setTab(t) {
+  if (!['oportunidades', 'analise', 'cobertura'].includes(t)) t = 'oportunidades';
+  S.tab = t;
+  $$('#tabs a').forEach((a) => a.classList.toggle('on', a.dataset.tab === t));
+  ['oportunidades', 'analise', 'cobertura'].forEach((n) => { $('#v-' + n).hidden = n !== t; });
+  $('#layout').classList.toggle('nofilters', t !== 'oportunidades');
+  render();
+}
+
+/* ---------- filtros laterais ---------- */
+function facet(el, key, set, rows) {
+  const counts = {};
+  rows.forEach((r) => { if (r[key] && r[key] !== '-') counts[r[key]] = (counts[r[key]] || 0) + 1; });
+  set.forEach((v) => { if (!(v in counts)) counts[v] = 0; });
+  el.innerHTML = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([k, n]) =>
+    `<button type="button" class="opt ${set.has(k) ? 'on' : ''}" data-set="${key}" data-v="${esc(k)}"><span class="box"></span><span class="t">${esc(k)}</span><span class="c num">${NF.format(n)}</span></button>`).join('')
+    || '<span style="color:var(--muted);font-size:12px">Nada neste recorte</span>';
+}
+function radarJSON() {
+  return JSON.stringify({radares: radares.map((r) => ({nome:r.nome, palavras_chave:r.f.q ? [r.f.q] : [], municipios:r.f.munis, categorias:r.f.cats, modalidades:r.f.mods, valor_minimo:r.f.vmin || 0}))}, null, 1);
+}
+function renderRadares() {
+  const now = Date.now();
+  $('#radar-list').innerHTML = radares.length ? radares.map((rd) => {
+    const st = fromSnap(rd.f), hits = DATA.all.filter((r) => match(r, st, now)), novas = hits.filter((r) => isNova(r) || isAlt(r)).length;
+    return `<div class="radar"><button type="button" class="radar-b" data-act="apply-radar" data-v="${esc(rd.id)}"><b>${esc(rd.nome)}</b><span class="num">${NF.format(hits.length)}${novas ? ` <em>+${novas}</em>` : ''}</span></button><button type="button" class="radar-x" data-act="del-radar" data-v="${esc(rd.id)}" aria-label="Remover radar">×</button></div>`;
+  }).join('') : '<p class="hint" style="margin:0">Nenhum radar ainda.</p>';
+  $('#radar-json').value = radares.length ? radarJSON() : '';
+}
+function renderSide() {
+  facet($('#f-mods'), 'modalidade', S.mods, filterRows(['mods']));
+  facet($('#f-cats'), 'categoria', S.cats, filterRows(['cats']));
+  facet($('#f-assoc'), 'associacao', S.assocs, filterRows(['assocs']));
+  [['#f-tipo', S.tipo], ['#f-urg', S.urg], ['#f-news', S.news]].forEach(([sel, v]) => $$(sel + ' button').forEach((b) => b.classList.toggle('on', b.dataset.v === v)));
+  $('#f-direct').classList.toggle('on', S.direct); $('#f-longo').classList.toggle('on', S.longo);
+  $('#f-atip').classList.toggle('on', S.atip); $('#f-saved').classList.toggle('on', S.onlySaved);
+  $('#f-since').hidden = !lastVisit; $('#f-since').classList.toggle('on', S.since);
+  renderRadares();
+}
+
+/* ---------- KPIs ---------- */
+function spark(vals, w = 92, h = 30) {
+  const max = Math.max(1, ...vals), step = w / Math.max(1, vals.length - 1);
+  const pts = vals.map((v, i) => `${(i * step).toFixed(1)},${(h - 3 - (v / max) * (h - 6)).toFixed(1)}`);
+  return `<svg class="sp" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline points="${pts.join(' ')}" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+function renderKPIs(rows) {
+  const now = Date.now(), s0 = new Date().setHours(0, 0, 0, 0), todas = filterRows(['tipo']);
+  const comPrazo = rows.filter((r) => r._end !== null), h48 = comPrazo.filter((r) => r._end - now <= 2 * DAY).length;
+  const usados = rows.filter((r) => r._val && (S.atip || !r._atip)), sum = usados.reduce((s, r) => s + r._val, 0), atip = rows.filter((r) => r._atip).length;
+  const med = quant(usados.map((r) => r._val).sort((a, b) => a - b), .5), semValor = rows.filter((r) => !r._val).length;
+  const munis = new Set(rows.map((r) => r.municipio)).size;
+  const perDay = Array(14).fill(0), valDay = Array(14).fill(0);
+  comPrazo.forEach((r) => { const i = Math.floor((r._end - s0) / DAY); if (i >= 0 && i < 14) { perDay[i]++; if (!r._atip) valDay[i] += r._val || 0; } });
+  const nDisp = todas.filter((r) => !r._cred && r._end !== null).length, nCred = todas.filter((r) => r._cred).length;
+  $('#kpis').innerHTML = `
+    <div class="kpi"><div class="l">Oportunidades abertas</div><div class="v num">${NF.format(rows.length)}</div><div class="s">${NF.format(nDisp)} disputas · ${NF.format(nCred)} credenciamentos no total</div>${spark(perDay)}</div>
+    <button type="button" class="kpi ${h48 ? 'hot' : ''}" data-act="urg48"><div class="l">Encerram em 48 horas</div><div class="v num">${NF.format(h48)}</div><div class="s">ver só estas →</div></button>
+    <div class="kpi"><div class="l">Valor estimado</div><div class="v num">${BRLc.format(sum)}</div><div class="s">mediana ${BRLc.format(med)} · ${NF.format(semValor)} sem valor${atip ? ` · ${NF.format(atip)} ${atip === 1 ? 'valor atípico' : 'valores atípicos'} ${S.atip ? 'incluído' + (atip === 1 ? '' : 's') : 'fora da soma'}` : ''}</div>${spark(valDay)}</div>
+    <div class="kpi"><div class="l">Municípios com oportunidades</div><div class="v num">${NF.format(munis)}</div><div class="s">de 295 em Santa Catarina</div></div>`;
+  $('#tab-n').textContent = NF.format(rows.length);
+}
+
+/* ---------- lista ---------- */
+function selos(r) {
+  const o = [];
+  if ((r.fontes || [r.fonte]).includes('PNCP') === false) o.push('<span class="badge" title="Informada ao TCE-SC; não localizada no PNCP">só TCE-SC</span>');
+  if (isNova(r)) o.push('<span class="badge nova">Nova</span>');
+  if (mudouPrazo(r)) o.push('<span class="badge alt">Prazo alterado</span>');
+  else if (mudouValor(r)) o.push('<span class="badge alt">Valor alterado</span>');
+  else if (isAlt(r)) o.push('<span class="badge alt">Alterada</span>');
+  if (r._atip) o.push('<span class="badge atip" title="Valor muito acima do padrão; confira no edital">Valor atípico</span>');
+  return o.join('');
+}
+function itemHTML(r, i) {
+  const ms = left(r), tag = r._end === null ? 'contratação direta' : r.modalidade;
+  return `<article class="item ${urgCls(ms)}" data-id="${esc(r.id)}" style="animation-delay:${Math.min(i, 12) * 18}ms" tabindex="0">
+    <div class="rail"></div>
+    <div><div class="tags"><span class="badge m">${esc(tag)}</span><span class="badge">${esc(r.categoria || 'Outros')}</span>${selos(r)}<span class="muni">${esc(r.municipio || '—')}</span></div>
+      <h3 class="obj">${esc(r.objeto || 'Sem descrição')}</h3>
+      <div class="sub"><span>Valor <b class="num">${r._val ? BRL.format(r._val) : 'não informado'}</b></span><span>${esc(r.numero ? 'Nº ' + r.numero : '')}</span><span>${esc(r.orgao || '')}</span></div></div>
+    <div class="right"><div class="left num" ${r._end !== null ? `data-end="${r._end}"` : ''}>${r._end !== null ? fmtLeft(ms) : 'sem prazo'}</div>
+      <div class="dl num">${r._end !== null ? fmtPrazo(r) : 'publicada ' + (r._pub ? fmtD(r._pub) : '—')}</div>
+      <button type="button" class="star ${saved.has(r.id) ? 'on' : ''}" data-star="${esc(r.id)}" aria-label="Salvar" title="Salvar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="${saved.has(r.id) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg></button></div>
+  </article>`;
+}
+function renderChips() {
+  const chips = [];
+  if (S.q) chips.push(['q', 'Busca', S.q]);
+  S.mods.forEach((v) => chips.push(['mods', 'Modalidade', v]));
+  S.cats.forEach((v) => chips.push(['cats', 'Categoria', v]));
+  S.assocs.forEach((v) => chips.push(['assocs', 'Associação', v]));
+  S.munis.forEach((v) => chips.push(['munis', 'Município', v]));
+  if (S.vmin != null) chips.push(['vmin', 'Valor ≥', BRL.format(S.vmin)]);
+  if (S.vmax != null) chips.push(['vmax', 'Valor ≤', BRL.format(S.vmax)]);
+  if (S.tipo !== 'todas') chips.push(['tipo', 'Tipo', S.tipo === 'cred' ? 'só credenciamentos' : 'só disputas (credenciamentos ocultos)']);
+  if (S.urg !== 'todas') chips.push(['urg', 'Prazo', {h48:'até 48 h', d7:'até 7 dias', d30:'até 30 dias'}[S.urg]]);
+  if (S.news !== 'todas') chips.push(['news', 'Novidades', S.news]);
+  $('#chips').innerHTML = chips.map(([k, l, v]) => `<button type="button" class="chip" data-chip="${k}" data-v="${esc(v)}"><b>${esc(l)}</b> ${esc(v)}<span>×</span></button>`).join('');
+}
+function renderFeed(rows) {
+  const sorted = rows.slice().sort(sorters[S.sort]);
+  $('#res-t').textContent = `${NF.format(sorted.length)} ${sorted.length === 1 ? 'oportunidade' : 'oportunidades'}`;
+  $('#feed').innerHTML = sorted.length ? sorted.slice(0, S.limit).map(itemHTML).join('') :
+    '<div class="empty">Nenhuma oportunidade com esses filtros.<br><button class="link" data-act="clear" type="button" style="margin-top:.5rem">Limpar filtros</button></div>';
+  $('#more').hidden = sorted.length <= S.limit;
+  $('#more').textContent = `Mostrar mais (${NF.format(Math.min(50, sorted.length - S.limit))} de ${NF.format(sorted.length - S.limit)} restantes)`;
+}
+
+/* ---------- análise ---------- */
+function hbars(items, act, fmtN) {
+  const max = Math.max(1, ...items.map((i) => i.n));
+  return items.map((i) => `<button type="button" class="hb" data-act="${act}" data-v="${esc(i.k)}"><span class="hb-l" title="${esc(i.k)}">${esc(i.k)}</span><span class="hb-bar"><i style="width:${(100 * i.n / max).toFixed(1)}%"></i></span><span class="hb-n num">${fmtN ? fmtN(i) : NF.format(i.n)}</span></button>`).join('')
+    || '<div class="empty" style="padding:1.5rem">Sem dados no recorte.</div>';
+}
+const tally = (rows, key) => { const m = {}; rows.forEach((r) => { const k = r[key] || 'Outros'; (m[k] = m[k] || {k, n: 0, v: 0}); m[k].n++; m[k].v += (r._val && !r._atip) ? r._val : 0; }); return Object.values(m).sort((a, b) => b.n - a.n); };
+function renderMap(rows) {
+  const el = $('#ch-mapa'), M = DATA.mapa;
+  if (!M) { el.innerHTML = '<div class="empty" style="padding:1.5rem">Mapa indisponível neste ambiente.</div>'; return; }
+  const cnt = {}, val = {}, nome = {};
+  rows.forEach((r) => { const k = chave(r.municipio); cnt[k] = (cnt[k] || 0) + 1; val[k] = (val[k] || 0) + ((r._val && !r._atip) ? r._val : 0); nome[k] = nome[k] || r.municipio; });
+  const max = Math.max(1, ...Object.values(cnt));
+  el.innerHTML = `<svg viewBox="0 0 ${M.w} ${M.h}" role="img" aria-label="Mapa de oportunidades por município">` + M.municipios.map((m) => {
+    const k = chave(m.nome), n = cnt[k] || 0, tip = `${m.nome} · ${n} ${n === 1 ? 'oportunidade' : 'oportunidades'}${n && val[k] ? ' · ' + BRLc.format(val[k]) : ''}`;
+    return `<path d="${m.d}" fill="${n ? 'var(--accent)' : 'var(--surface2)'}" fill-opacity="${n ? (0.2 + 0.75 * Math.sqrt(n / max)).toFixed(2) : 1}" stroke="var(--bg)" stroke-width="1" data-tip="${esc(tip)}"${n ? ` data-act="muni" data-v="${esc(nome[k])}" style="cursor:pointer"` : ''}/>`;
+  }).join('') + '</svg>';
+}
+function renderAnalysis() {
+  const rows = filterRows(), s0 = new Date().setHours(0, 0, 0, 0), N = 30;
+  renderMap(rows);
+  const dis = Array(N).fill(0), cr = Array(N).fill(0);
+  rows.forEach((r) => { if (r._end === null) return; const i = Math.floor((r._end - s0) / DAY); if (i >= 0 && i < N) (r._cred ? cr : dis)[i]++; });
+  const later = rows.filter((r) => r._end !== null && r._end - s0 >= N * DAY).length;
+  $('#n-prazos').textContent = later ? `Quando as propostas encerram. Mais ${NF.format(later)} oportunidades têm prazo depois de 30 dias.` : 'Quando as propostas encerram.';
+  const W = 760, H = 230, ml = 30, mb = 26, mt = 8, bw = (W - ml) / N, ymax = Math.max(4, ...dis.map((v, i) => v + cr[i]));
+  const y = (v) => mt + (H - mb - mt) * (1 - v / ymax);
+  let g = [0, .25, .5, .75, 1].map((f) => { const v = Math.round(ymax * f); return `<line x1="${ml}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="var(--border)"/><text x="${ml - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`; }).join('');
+  for (let i = 0; i < N; i++) {
+    const x = ml + i * bw + 2, w = bw - 4, d = new Date(s0 + i * DAY), tip = `${pad(d.getDate())}/${pad(d.getMonth() + 1)} · ${dis[i]} disputas · ${cr[i]} credenciamentos`;
+    g += `<rect x="${x}" y="${y(dis[i])}" width="${w}" height="${Math.max(0, y(0) - y(dis[i]))}" rx="3" fill="var(--bar)"/>`;
+    g += `<rect x="${x}" y="${y(dis[i] + cr[i])}" width="${w}" height="${Math.max(0, y(dis[i]) - y(dis[i] + cr[i]))}" rx="3" fill="var(--bar2)"/>`;
+    g += `<rect x="${x - 2}" y="${mt}" width="${bw}" height="${H - mb - mt}" fill="transparent" data-tip="${esc(tip)}"/>`;
+    if (i % 5 === 0) g += `<text x="${x + w / 2}" y="${H - 8}" text-anchor="middle">${pad(d.getDate())}/${pad(d.getMonth() + 1)}</text>`;
+  }
+  $('#ch-prazos').innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Prazos por dia">${g}</svg>`;
+  const bins = [['Até R$ 50 mil', 0, 5e4], ['R$ 50 mil a 200 mil', 5e4, 2e5], ['R$ 200 mil a 1 mi', 2e5, 1e6], ['R$ 1 mi a 5 mi', 1e6, 5e6], ['Acima de R$ 5 mi', 5e6, Infinity]]
+    .map(([k, a, b]) => ({k, n: rows.filter((r) => r._val != null && r._val >= a && r._val < b).length}));
+  bins.push({k: 'Sem valor informado', n: rows.filter((r) => !r._val).length});
+  $('#ch-faixas').innerHTML = hbars(bins, 'noop');
+  $('#ch-cats').innerHTML = hbars(tally(rows, 'categoria'), 'cat', (i) => `${NF.format(i.n)} · ${BRLc.format(i.v)}`);
+  $('#ch-munis').innerHTML = hbars(tally(rows, 'municipio').slice(0, 12), 'muni', (i) => `${NF.format(i.n)} · ${BRLc.format(i.v)}`);
+  const pubs = {};
+  if (DATA.res && DATA.res.publicacoes_por_dia) Object.assign(pubs, DATA.res.publicacoes_por_dia);
+  else DATA.all.forEach((r) => { if (r._pub) { const k = new Date(r._pub).toISOString().slice(0, 10); pubs[k] = (pubs[k] || 0) + 1; } });
+  const days = Array.from({length: 30}, (_, i) => new Date(s0 - (29 - i) * DAY)), key = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const vals = days.map((d) => pubs[key(d)] || 0), pm = Math.max(4, ...vals), PW = 1100, PH = 200, pl = 34, py = (v) => 8 + (PH - 34) * (1 - v / pm), px = (i) => pl + i * (PW - pl) / 29;
+  const line = vals.map((v, i) => `${px(i).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
+  let pg = [0, .5, 1].map((f) => { const v = Math.round(pm * f); return `<line x1="${pl}" x2="${PW}" y1="${py(v)}" y2="${py(v)}" stroke="var(--border)"/><text x="${pl - 6}" y="${py(v) + 4}" text-anchor="end">${v}</text>`; }).join('');
+  pg += `<polygon points="${pl},${py(0)} ${line} ${px(29)},${py(0)}" fill="var(--accent)" opacity=".12"/><polyline points="${line}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  vals.forEach((v, i) => { pg += `<rect x="${px(i) - 14}" y="8" width="28" height="${PH - 34}" fill="transparent" data-tip="${fmtD(days[i])} · ${NF.format(v)} publicações"/>`; if (i % 5 === 0) pg += `<text x="${px(i)}" y="${PH - 8}" text-anchor="middle">${fmtD(days[i])}</text>`; });
+  $('#ch-pub').innerHTML = `<svg viewBox="0 0 ${PW} ${PH}" role="img" aria-label="Publicações por dia">${pg}</svg>`;
+}
+
+/* ---------- cobertura ---------- */
+const ESTADO = {ok:'Completa', parcial:'Parcial', falhou:'Falhou', nao_implementada:'Em desenvolvimento', desconhecido:'Sem medição'};
+function renderCoverage() {
+  const st = DATA.st, cov = st && st.cobertura;
+  if (cov && cov.percentual != null) {
+    $('#cov-n').textContent = `${NF.format(cov.registros_coletados)} de ${NF.format(cov.registros_esperados)} registros esperados`;
+    $('#cov-big').innerHTML = `<div class="big num" style="color:${cov.percentual >= 98 ? 'var(--ok)' : cov.percentual >= 85 ? 'var(--warn)' : 'var(--crit)'}">${cov.percentual.toLocaleString('pt-BR')}%</div><p style="margin:.6rem 0 0;color:var(--muted);font-size:12.5px">${NF.format(cov.consultas_completas)} de ${NF.format(cov.consultas)} consultas completas</p>`;
+  } else {
+    $('#cov-n').textContent = 'Sem medição nesta coleta';
+    $('#cov-big').innerHTML = '<div class="big" style="color:var(--warn)">—</div><p style="margin:.6rem 0 0;color:var(--muted);font-size:12.5px">Estes dados vieram de uma coleta que não media cobertura.</p>';
+  }
+  const fontes = (st && st.fontes) || [{nome:'PNCP', estado:'desconhecido', mensagem:'Dados sem medição de cobertura.'}];
+  $('#cov-src').innerHTML = fontes.map((f) => `<div class="src"><h4>${esc(f.nome)}<span class="pill ${esc(f.estado)}">${ESTADO[f.estado] || esc(f.estado)}</span></h4>
+    <p>${esc(f.mensagem || '')}</p>${f.registros ? `<p><b class="num" style="color:var(--text)">${NF.format(f.registros)}</b> registros na última rodada</p>` : ''}</div>`).join('');
+  const fails = (cov && cov.falhas) || [];
+  $('#cov-fail').innerHTML = fails.length ? `<h3 style="margin:1.4rem 0 .5rem;font-size:14px">Consultas incompletas</h3><div class="card">${fails.map((f) => `<div class="fail"><b>${esc(f.consulta)}</b><span>${esc(f.erro || `veio ${f.coletado} de ${f.esperado}`)}</span></div>`).join('')}</div>` : '';
+  const bad = !cov || cov.percentual == null || cov.percentual < 98 || fontes.some((f) => f.estado === 'falhou' || f.estado === 'parcial');
+  $('#tab-warn').hidden = !bad;
+}
+
+/* ---------- gaveta ---------- */
+function openDrawer(id) {
+  const r = DATA.all.find((x) => x.id === id); if (!r) return;
+  const ms = left(r);
+  const mud = r._mud.length && r._alt ? `${r._mud.map((k) => ({valor_estimado:'valor', encerramento_propostas:'prazo de encerramento', abertura_propostas:'abertura das propostas', situacao:'situação', objeto:'objeto', modalidade:'modalidade'}[k] || k)).join(', ')} (em ${fmtDT(r._alt)})` : '';
+  const kv = [['Município', r.municipio], ['Órgão', r.orgao], ['CNPJ do órgão', r.cnpj_orgao], ['Modalidade', r.modalidade], ['Número / processo', [r.numero, r.processo].filter(Boolean).join(' · ')],
+    ['Valor estimado', r._val ? BRL.format(r._val) + (r._atip ? ' (valor atípico, confira no edital)' : '') : 'não informado'], ['Publicada em', r._pub ? fmtDT(r._pub) : '—'], ['Abertura das propostas', r.abertura_propostas ? fmtDT(Date.parse(r.abertura_propostas)) : '—'],
+    ['Encerramento', r._end ? fmtPrazo(r) + (r.prazo_aprox ? ' (só a data é informada)' : '') : 'sem prazo'], ['Situação', r.situacao], ['Mudou recentemente', mud], ['Registro de preços', r.srp == null ? '—' : r.srp ? 'Sim' : 'Não'],
+    ['Categoria (estimada)', r.categoria], ['Região', r.regiao && r.regiao !== '-' ? r.regiao : ''], ['Associação de municípios', r.associacao && r.associacao !== '-' ? r.associacao : ''],
+    ['Veículo de publicação', r.veiculo], ['Fontes', (r.fontes || [r.fonte]).join(' + ')]]
+    .filter(([, v]) => v).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('');
+  $('#drawer').innerHTML = `<div class="dh"><div class="tags"><span class="badge m">${esc(r.modalidade || '')}</span><span class="badge">${esc(r.categoria || '')}</span>${selos(r)}</div><button class="icon-btn" type="button" data-act="close" aria-label="Fechar">✕</button></div>
+    <div class="db">${r._end ? `<div class="big-left num" style="color:${ms < 2 * DAY ? 'var(--crit)' : ms < 7 * DAY ? 'var(--warn)' : 'var(--text)'}" data-end="${r._end}">${fmtLeft(ms)}</div><div style="color:var(--muted);font-size:12px">para encerrar as propostas</div>` : ''}
+      <h2>${esc(r.objeto || 'Sem descrição')}</h2><dl class="kv">${kv}</dl></div>
+    <div class="cta">${r.link_pncp ? `<a class="btn primary" href="${esc(r.link_pncp)}" target="_blank" rel="noopener noreferrer">Abrir edital no PNCP ↗</a>` : ''}${r.link_edital ? `<a class="btn" href="${esc(r.link_edital)}" target="_blank" rel="noopener noreferrer">Edital (PDF) ↗</a>` : ''}${r.link_origem ? `<a class="btn" href="${esc(r.link_origem)}" target="_blank" rel="noopener noreferrer">Sistema de origem ↗</a>` : ''}
+      <button class="btn" type="button" data-star="${esc(r.id)}">${saved.has(r.id) ? '★ Salva' : '☆ Salvar'}</button></div>`;
+  $('#drawer').classList.add('on'); $('#scrim').classList.add('on'); $('#drawer').setAttribute('aria-hidden', 'false');
+}
+function closeDrawer() { $('#drawer').classList.remove('on'); $('#scrim').classList.remove('on'); $('#drawer').setAttribute('aria-hidden', 'true'); $('#side').classList.remove('open'); }
+
+/* ---------- exportar / compartilhar ---------- */
+function flash(btn, txt) { if (!btn) return; const o = btn.dataset.o || btn.textContent; btn.dataset.o = o; btn.textContent = txt; setTimeout(() => { btn.textContent = o; }, 1600); }
+function exportCSV() {
+  const rows = filterRows().sort(sorters[S.sort]);
+  const head = ['Município','Modalidade','Categoria','Objeto','Valor estimado (R$)','Prazo para propostas','Publicação','Órgão','Número','Fontes','Edital PNCP','Edital (PDF)'];
+  const q = (v) => '"' + String(v ?? '').replace(/"/g, '""').replace(/\r?\n/g, ' ') + '"';
+  const lines = [head.map(q).join(';')].concat(rows.map((r) => [r.municipio, r.modalidade, r.categoria, r.objeto, r._val == null ? '' : String(r._val).replace('.', ','), r.encerramento_propostas, r.publicacao, r.orgao, r.numero, (r.fontes || [r.fonte]).join('+'), r.link_pncp, r.link_edital].map(q).join(';')));
+  const blob = new Blob(['\ufeff' + lines.join('\r\n')], {type: 'text/csv;charset=utf-8'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `oportunidades-sc-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+  flash($('#btn-csv'), `${NF.format(rows.length)} linhas`);
+}
+async function copyText(txt) { try { await navigator.clipboard.writeText(txt); return true; } catch (e) { return false; } }
+
+/* ---------- render geral ---------- */
+function render() {
+  renderLive();
+  const rows = filterRows();
+  renderSide();
+  if (S.tab === 'oportunidades') { renderKPIs(rows); renderChips(); renderFeed(rows); }
+  else { $('#tab-n').textContent = NF.format(rows.length); }
+  if (S.tab === 'analise') renderAnalysis();
+  renderCoverage();
+  syncURL();
+}
+
+/* ---------- eventos ---------- */
+document.addEventListener('click', async (e) => {
+  const t = e.target;
+  let el;
+  if ((el = t.closest('[data-star]'))) { e.stopPropagation(); const id = el.dataset.star; saved.has(id) ? saved.delete(id) : saved.add(id); store.set('radar-sc-saved', [...saved]); render(); if ($('#drawer').classList.contains('on')) openDrawer(id); return; }
+  if ((el = t.closest('.opt'))) { go(() => toggleSet({modalidade: S.mods, categoria: S.cats, associacao: S.assocs}[el.dataset.set], el.dataset.v)); return; }
+  if ((el = t.closest('#f-tipo button'))) { go(() => { S.tipo = el.dataset.v; }); return; }
+  if ((el = t.closest('#f-urg button'))) { go(() => { S.urg = el.dataset.v; }); return; }
+  if ((el = t.closest('#f-news button'))) { go(() => { S.news = el.dataset.v; }); return; }
+  if ((el = t.closest('[data-chip]'))) { const k = el.dataset.chip, v = el.dataset.v; go(() => { if (k === 'q') { S.q = ''; $('#q').value = ''; } else if (k === 'mods') S.mods.delete(v); else if (k === 'cats') S.cats.delete(v); else if (k === 'assocs') S.assocs.delete(v); else if (k === 'munis') S.munis.delete(v); else if (k === 'vmin') { S.vmin = null; $('#f-vmin').value = ''; } else if (k === 'vmax') { S.vmax = null; $('#f-vmax').value = ''; } else if (k === 'tipo') S.tipo = 'todas'; else if (k === 'urg') S.urg = 'todas'; else if (k === 'news') S.news = 'todas'; }); return; }
+  if (t.closest('#f-direct')) { go(() => { S.direct = !S.direct; }); return; }
+  if (t.closest('#f-saved')) { go(() => { S.onlySaved = !S.onlySaved; }); return; }
+  if (t.closest('[data-act="tgl-longo"]')) { go(() => { S.longo = !S.longo; }); return; }
+  if (t.closest('[data-act="tgl-atip"]')) { go(() => { S.atip = !S.atip; }); return; }
+  if (t.closest('[data-act="tgl-since"]')) { go(() => { S.since = !S.since; }); return; }
+  if (t.closest('#f-clear') || t.closest('[data-act="clear"]')) { go(resetFiltros); return; }
+  if (t.closest('[data-act="urg48"]')) { go(() => { S.urg = S.urg === 'h48' ? 'todas' : 'h48'; }); return; }
+  if ((el = t.closest('[data-act="cat"]'))) { S.cats = new Set([el.dataset.v]); S.tab = 'oportunidades'; location.hash = 'oportunidades'; setTab('oportunidades'); return; }
+  if ((el = t.closest('[data-act="muni"]'))) { S.munis = new Set([el.dataset.v]); S.tab = 'oportunidades'; location.hash = 'oportunidades'; setTab('oportunidades'); return; }
+  if (t.closest('[data-act="save-radar"]')) {
+    const nome = $('#radar-nome').value.trim() || `Radar ${radares.length + 1}`;
+    radares.push({id: 'r' + Date.now().toString(36), nome, f: snap(S)}); store.set('radar-sc-radares', radares); $('#radar-nome').value = ''; render(); return;
+  }
+  if ((el = t.closest('[data-act="apply-radar"]'))) { const rd = radares.find((x) => x.id === el.dataset.v); if (rd) { go(() => { Object.assign(S, fromSnap(rd.f)); $('#q').value = S.q; }); } return; }
+  if ((el = t.closest('[data-act="del-radar"]'))) { radares = radares.filter((x) => x.id !== el.dataset.v); store.set('radar-sc-radares', radares); render(); return; }
+  if ((el = t.closest('[data-act="copyjson"]'))) { flash(el, (await copyText($('#radar-json').value)) ? 'Copiado' : 'Selecione e copie'); return; }
+  if (t.closest('[data-act="csv"]')) { exportCSV(); return; }
+  if ((el = t.closest('[data-act="copylink"]'))) { flash(el, (await copyText(location.href)) ? 'Link copiado' : 'Copie da barra'); return; }
+  if (t.closest('[data-act="close"]') || t.id === 'scrim') { closeDrawer(); return; }
+  if (t.closest('#more')) { S.limit += 50; render(); return; }
+  if (t.closest('#btn-filtros')) { $('#side').classList.add('open'); $('#scrim').classList.add('on'); return; }
+  if (t.closest('#btn-theme')) { const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); const n = cur === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = n; store.set('radar-sc-theme', n); return; }
+  if ((el = t.closest('.item'))) { openDrawer(el.dataset.id); return; }
+  if (!t.closest('.ac')) $('#ac-list').hidden = true;
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeDrawer();
+  if (e.key === '/' && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) { e.preventDefault(); $('#q').focus(); }
+  if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('item')) openDrawer(e.target.dataset.id);
+});
+let qt; $('#q').addEventListener('input', (e) => { clearTimeout(qt); qt = setTimeout(() => go(() => { S.q = e.target.value; }), 160); });
+$('#sort').addEventListener('change', (e) => go(() => { S.sort = e.target.value; }));
+const money = (v) => { const n = Number(String(v).replace(/\./g, '').replace(',', '.').replace(/[^\d.]/g, '')); return v.trim() === '' || isNaN(n) ? null : n; };
+$('#f-vmin').addEventListener('input', (e) => go(() => { S.vmin = money(e.target.value); }));
+$('#f-vmax').addEventListener('input', (e) => go(() => { S.vmax = money(e.target.value); }));
+$('#f-muni').addEventListener('input', (e) => {
+  const q = chave(e.target.value), list = $('#ac-list');
+  if (!q) { list.hidden = true; return; }
+  const c = {}; DATA.all.forEach((r) => { if (r.municipio && chave(r.municipio).includes(q) && !S.munis.has(r.municipio)) c[r.municipio] = (c[r.municipio] || 0) + 1; });
+  const items = Object.entries(c).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  list.innerHTML = items.map(([k, n]) => `<button type="button" data-ac="${esc(k)}">${esc(k)}<span class="num">${n}</span></button>`).join('') || '<div style="padding:.6rem .7rem;color:var(--muted)">Nenhum município</div>';
+  list.hidden = false;
+});
+$('#ac-list').addEventListener('click', (e) => { const b = e.target.closest('[data-ac]'); if (!b) return; e.stopPropagation(); go(() => S.munis.add(b.dataset.ac)); $('#f-muni').value = ''; $('#ac-list').hidden = true; });
+const tip = $('#tip');
+document.addEventListener('mousemove', (e) => {
+  const el = e.target.closest && e.target.closest('[data-tip]');
+  if (!el) { tip.classList.remove('on'); return; }
+  tip.textContent = el.dataset.tip; tip.classList.add('on');
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  tip.style.left = Math.min(innerWidth - w - 8, e.clientX + 14) + 'px'; tip.style.top = Math.max(8, Math.min(innerHeight - h - 8, e.clientY - h - 10)) + 'px';
+});
+window.addEventListener('hashchange', () => setTab(location.hash.slice(1)));
+setInterval(() => { $$('[data-end]').forEach((el) => { el.textContent = fmtLeft(+el.dataset.end - Date.now()); }); renderLive(); }, 30000);
+
+/* ---------- início ---------- */
+{ const t = store.get('radar-sc-theme', null); if (t) document.documentElement.dataset.theme = t; }
+fromQuery();
+async function boot(first) {
+  try {
+    const [d, mapa] = await Promise.all([load(), first ? loadMapa() : Promise.resolve(DATA.mapa)]);
+    DATA = {all: prepare(d.lic || []), res: d.res || null, st: d.st || null, mapa, primeira: d.res && d.res.primeira_coleta_em ? Date.parse(d.res.primeira_coleta_em) : null, medianaGeral: DATA.medianaGeral};
+    if (first) { $('#q').value = S.q; $('#sort').value = S.sort; if (S.vmin != null) $('#f-vmin').value = S.vmin; if (S.vmax != null) $('#f-vmax').value = S.vmax; setTab(location.hash.slice(1)); } else render();
+  } catch (err) {
+    if (first) { $('#feed').innerHTML = `<div class="empty">Não foi possível carregar os dados.<br><small>${esc(err.message)}</small></div>`; setTab('oportunidades'); }
+  }
+}
+boot(true);
+if (!window.__PRELOAD__) setInterval(() => boot(false), 5 * 60 * 1000);
+})();
+</script>
+</body>
+</html>

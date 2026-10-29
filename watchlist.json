@@ -1,0 +1,16 @@
+{
+ "_ajuda": "Você recebe um resumo no Telegram/webhook sempre que algo NOVO ou ALTERADO bater com um radar. Dá para criar radares no painel (Meus radares > Usar nos alertas) e colar aqui.",
+ "radares": [
+  {
+   "nome": "Exemplo: tecnologia",
+   "palavras_chave": [
+    "software",
+    "sistema de gestão"
+   ],
+   "categorias": [],
+   "municipios": [],
+   "modalidades": [],
+   "valor_minimo": 0
+  }
+ ]
+}
