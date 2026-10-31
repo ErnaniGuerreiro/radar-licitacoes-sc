@@ -1,0 +1,39 @@
+{
+ "atualizado_em": "2026-10-31T18:56:49+00:00",
+ "fontes": [
+  {
+   "nome": "PNCP",
+   "estado": "ok",
+   "registros": 2578,
+   "mensagem": "65 de 65 consultas completas",
+   "ultima_execucao": "2026-10-31T18:56:22+00:00"
+  },
+  {
+   "nome": "TCE-SC (Farol · Oportunidades)",
+   "estado": "ok",
+   "registros": 1388,
+   "mensagem": "2 de 2 consultas completas",
+   "ultima_execucao": "2026-10-31T18:56:48+00:00"
+  },
+  {
+   "nome": "DOM/SC",
+   "estado": "nao_implementada",
+   "mensagem": "Sem coletor próprio. Boa parte do que sai no Diário Oficial dos Municípios já chega pelo Farol (veículo de publicação informado pelo município ao TCE-SC).",
+   "registros": 0
+  },
+  {
+   "nome": "Plataformas (BLL, Licitanet, Compras Públicas, Betha...)",
+   "estado": "nao_implementada",
+   "mensagem": "Coletor ainda não implementado. Parte do que elas publicam já chega via PNCP.",
+   "registros": 0
+  }
+ ],
+ "cobertura": {
+  "consultas": 67,
+  "consultas_completas": 67,
+  "registros_esperados": 20175,
+  "registros_coletados": 20175,
+  "percentual": 100.0,
+  "falhas": []
+ }
+}
