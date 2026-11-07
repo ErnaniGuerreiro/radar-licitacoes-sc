@@ -1,0 +1,47 @@
+{
+ "atualizado_em": "2026-11-07T13:05:52+00:00",
+ "fontes": [
+  {
+   "nome": "PNCP",
+   "estado": "parcial",
+   "registros": 2744,
+   "mensagem": "64 de 65 consultas completas",
+   "ultima_execucao": "2026-11-07T13:05:11+00:00"
+  },
+  {
+   "nome": "TCE-SC (Farol · Oportunidades)",
+   "estado": "ok",
+   "registros": 1307,
+   "mensagem": "2 de 2 consultas completas",
+   "ultima_execucao": "2026-11-07T13:05:51+00:00"
+  },
+  {
+   "nome": "DOM/SC",
+   "estado": "nao_implementada",
+   "mensagem": "Sem coletor próprio. Boa parte do que sai no Diário Oficial dos Municípios já chega pelo Farol (veículo de publicação informado pelo município ao TCE-SC).",
+   "registros": 0
+  },
+  {
+   "nome": "Plataformas (BLL, Licitanet, Compras Públicas, Betha...)",
+   "estado": "nao_implementada",
+   "mensagem": "Coletor ainda não implementado. Parte do que elas publicam já chega via PNCP.",
+   "registros": 0
+  }
+ ],
+ "cobertura": {
+  "consultas": 67,
+  "consultas_completas": 66,
+  "registros_esperados": 19514,
+  "registros_coletados": 19514,
+  "percentual": 100.0,
+  "falhas": [
+   {
+    "consulta": "abertas · Pregão - Presencial",
+    "esperado": 0,
+    "coletado": 0,
+    "completo": false,
+    "erro": "esgotou 6 tentativas (ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))))"
+   }
+  ]
+ }
+}
