@@ -24,7 +24,7 @@ jobs:
     timeout-minutes: 90
     environment:
       name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+      url: ${{ steps.deploy.outputs.page_url || steps.deploy2.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -50,6 +50,17 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
 
+      # O histórico é guardado ANTES de publicar: se a publicação falhar, nada da coleta se perde.
+      - name: Guardar histórico
+        run: |
+          cd dados
+          git init -q -b dados
+          git config user.name "coletor-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add -A
+          git commit -qm "dados $(date -u +'%F %H:%M')"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" dados
+
       - name: Montar o site
         run: |
           mkdir -p _site/dados
@@ -62,13 +73,13 @@ jobs:
 
       - id: deploy
         uses: actions/deploy-pages@v4
+        continue-on-error: true
 
-      - name: Guardar histórico
-        run: |
-          cd dados
-          git init -q -b dados
-          git config user.name "coletor-bot"
-          git config user.email "bot@users.noreply.github.com"
-          git add -A
-          git commit -qm "dados $(date -u +'%F %H:%M')"
-          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" dados
+      # A publicação do GitHub falha de vez em quando; espera um minuto e tenta uma segunda vez.
+      - name: Esperar antes de tentar de novo
+        if: steps.deploy.outcome == 'failure'
+        run: sleep 60
+
+      - id: deploy2
+        if: steps.deploy.outcome == 'failure'
+        uses: actions/deploy-pages@v4
